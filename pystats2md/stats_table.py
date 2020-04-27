@@ -30,7 +30,12 @@ class StatsTable(object):
         assert column in self.header_row, 'No such column'
         return index_of(self.header_row, column)
 
-    def add_gains(self, column=-1, baseline_row=0) -> StatsTable:
+    def add_gains(
+        self,
+        column=-1,
+        baseline_row=0,
+    ) -> StatsTable:
+
         column = self._column2index(column)
         self.header_row.append(f'Gains in {self.header_row[column]}')
         baseline = self.content[baseline_row][column]
@@ -42,11 +47,16 @@ class StatsTable(object):
                 r.append(num2str(gain) + 'x')
         return self
 
-    def add_ranking(self, column=-1) -> StatsTable:
+    def add_ranking(
+        self,
+        column=-1,
+        bigger_is_better=True,
+    ) -> StatsTable:
+
         self.header_row.append(f'Ranking by {self.header_row[column]}')
         values = [r[column] for r in self.content]
         values = [v for v in values if isinstance(v, (int, float))]
-        values = sorted(values)
+        values = sorted(values, reverse=bigger_is_better)
         for r in self.content:
             idx = index_of(values, r[column])
             if idx is None:
@@ -62,7 +72,13 @@ class StatsTable(object):
                     r.append(f'# {idx + 1}')
         return self
 
-    def add_emoji(self, column=-1, log_scale=False) -> StatsTable:
+    def add_emoji(
+        self,
+        column=-1,
+        log_scale=False,
+        bigger_is_better=True,
+    ) -> StatsTable:
+
         # https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md
         # https://gist.github.com/AliMD/3344523
         self.header_row.append(f'Good in {self.header_row[column]}')
@@ -74,37 +90,47 @@ class StatsTable(object):
             return self
 
         values = sorted(values)
-        value_smallest = values[0]
-        value_biggest = values[-1]
+        val_smallest = values[0]
+        val_biggest = values[-1]
         second_biggest = values[-2]
-        huge_leader_gap = (value_biggest / second_biggest) > 10
-        diff = (value_biggest-value_smallest)
-        best_bracket_smalest_val = value_biggest - diff/3
-        worst_bracket_biggest_val = value_smallest + diff/3
+        huge_leader_gap = (val_biggest / second_biggest) > 10
+        diff = (val_biggest-val_smallest)
+        biggest_bracket = val_biggest - diff/3
+        worst_bracket = val_smallest + diff/3
 
         if log_scale:
-            log_small = math.log(value_smallest)
-            log_big = math.log(value_biggest)
+            log_small = math.log(val_smallest)
+            log_big = math.log(val_biggest)
             diff = (log_big-log_small)
-            best_bracket_smalest_val = math.exp(log_big - diff/3)
-            worst_bracket_biggest_val = math.exp(log_small - diff/3)
+            biggest_bracket = math.exp(log_big - diff/3)
+            worst_bracket = math.exp(log_small - diff/3)
 
         for r in self.content:
             val = r[column]
             if not isinstance(val, (int, float)):
                 r.append('')
-            elif val >= best_bracket_smalest_val:
-                if val == value_biggest and huge_leader_gap:
-                    # Pick any random emoji and repeat it 3 times (jackpot!).
-                    cool_empjis = [':fire:', ':strawberry:', ':underage:']
-                    icon = random.choice(cool_empjis)
-                    r.append(icon * 3)
-                else:
-                    r.append(':thumbsup:')
-            elif val < worst_bracket_biggest_val:
-                r.append(':thumbsdown:')
-            else:
+                continue
+            # This result has nothing special in it.
+            if worst_bracket <= val <= biggest_bracket:
                 r.append('')
+                continue
+
+            # Pick any random emoji and repeat it 3 times (jackpot!).
+            is_best = (val == val_biggest) if bigger_is_better else (
+                val == val_smallest)
+            if is_best and huge_leader_gap:
+                cool_empjis = [':fire:', ':strawberry:', ':underage:']
+                icon = random.choice(cool_empjis)
+                r.append(icon * 3)
+
+            #
+            is_good = (val >= biggest_bracket) if bigger_is_better else (
+                val <= worst_bracket)
+            if is_good:
+                r.append(':thumbsup:')
+            else:
+                r.append(':thumbsdown:')
+
         return self
 
     def print(self) -> str:
