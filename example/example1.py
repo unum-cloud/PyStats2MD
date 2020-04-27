@@ -2,6 +2,7 @@ import pystats2md
 from pystats2md.stats_subset import *
 from pystats2md.stats_file import *
 from pystats2md.report import *
+from pystats2md.micro_bench import *
 
 f = StatsFile('example/benchmarks.json')
 r = Report()
@@ -48,3 +49,35 @@ r.add(StatsSubset(f).to_table(
 # ))
 
 r.print_to('example/example1.md')
+
+# print(StatsSubset.filter(
+#     f.benchmarks,
+#     benchmark_name='Insert Dump',
+# database_name='MongoDB',
+# dataset='Patent Citations Graph',
+# device_name='macbook',
+# ))
+
+assert f.contains(MicroBench(
+    benchmark_name='Insert Dump',
+    func=lambda: print('RUNNING!!!'),
+    database_name='MongoDB',
+    dataset='Patent Citations Graph',
+    device_name='macbook',
+)) == True
+
+assert f.existing_index(MicroBench(
+    benchmark_name='Insert Dump',
+    func=lambda: print('RUNNING!!!'),
+    database_name='MongoDB',
+    dataset='Movie Ratings',
+    device_name='macbook',
+)) == 0
+
+assert f.existing_index(MicroBench(
+    benchmark_name='Insert Dump',
+    func=lambda: print('RUNNING!!!'),
+    database_name='MongoDB',
+    dataset='Patent Citations Graph',
+    device_name='macbook',
+)) == 1

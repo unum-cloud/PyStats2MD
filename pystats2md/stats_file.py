@@ -102,8 +102,8 @@ class StatsFile(object):
 
     def existing_index(self, bench) -> Optional[int]:
         if isinstance(bench, mb.MicroBench):
-            bench = bench.filtering_predicate()
-        pred = ss.StatsSubset.predicate(bench)
+            bench = bench.filtering_criterea()
+        pred = ss.StatsSubset.predicate(**bench)
         for i, b in enumerate(self.benchmarks):
             if pred(b):
                 return i
@@ -111,12 +111,16 @@ class StatsFile(object):
 
     def contains(self, bench) -> bool:
         if isinstance(bench, mb.MicroBench):
-            bench = bench.filtering_predicate()
-        pred = ss.StatsSubset.predicate(bench)
+            bench = bench.filtering_criterea()
+        assert isinstance(bench, dict), type(bench).__name__
+        pred = ss.StatsSubset.predicate(**bench)
         for b in self.benchmarks:
             if pred(b):
                 return True
         return False
+
+    def __contains__(self, bench) -> bool:
+        return self.contains(bench)
 
     def upsert(self, bench) -> bool:
         """
@@ -125,9 +129,15 @@ class StatsFile(object):
             Returns `True` if the `bench` was inserted as new entry.
             Returns `False` if the `bench` replaced an older entry.
         """
-        if not isinstance(bench, dict):
-            bench = dict(bench)
         bench_idx = self.existing_index(bench)
+
+        if isinstance(bench, mb.MicroBench):
+            if not self.contains(bench):
+                if not bench.did_run():
+                    bench.run()
+        if not isinstance(bench, dict):
+            bench = bench.__dict__
+
         if bench_idx is None:
             self.benchmarks.append(bench)
         else:

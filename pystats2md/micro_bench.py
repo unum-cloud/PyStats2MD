@@ -2,6 +2,7 @@ from datetime import datetime
 import platform
 import time
 import inspect
+import copy
 
 import psutil
 
@@ -22,23 +23,32 @@ class MicroBench(object):
     def __init__(
         self,
         func,
-        name=None,
+        benchmark_name=None,
         device_name=None,
+        source=None,
         serialized=None,
         limit_iterations=1000,
         limit_operations=10000,
         limit_seconds=1.0,
+        **kwargs,
     ):
         """
-            If the provided `func` returns an integer - it's used as `count_operations`.
+            If the provided `func` returns an integer - it's 
+            used as `count_operations`.
+
+            The `source` and `serialized` are closely tied. 
+            Both allow importing previous results, but `source` 
+            also exports the new results back.
         """
         assert callable(func), 'Must be a callable!'
         self.func = func
-        self.benchmark_name = name if name else func.__name__
+        self.benchmark_name = benchmark_name if benchmark_name else func.__name__
         self.device_name = device_name if device_name else platform.node()
         self.limit_iterations = limit_iterations
         self.limit_operations = limit_operations
         self.limit_seconds = limit_seconds
+        self.attributes = dict(**kwargs)
+        self.source = source
         self.deserialize(serialized)
 
     def deserialize(self, serialized):
@@ -52,10 +62,11 @@ class MicroBench(object):
             self.count_operations = serialized['count_operations']
             self.count_iterations = serialized['count_iterations']
             self.date_utc = datetime.fromtimestamp(serialized['date_utc'])
+            self.attributes.update(serialized)
         elif isinstance(serialized, sf.StatsFile):
             self.deserialize(sf.StatsSubset(source=serialized))
         elif isinstance(serialized, ss.StatsSubset):
-            filters = self.filtering_predicate()
+            filters = self.filtering_criterea()
             matches = serialized.filter(serialized.dicts_list, **filters)
             if len(matches) > 0:
                 self.deserialize(matches[0])
@@ -72,22 +83,24 @@ class MicroBench(object):
             'cpu_scaling_enabled': False,
 
             # Fields that only we output.
-            'device': self.device_name,
+            'device_name': self.device_name,
             'date_utc': datetime.timestamp(date),
             'date_readable': date.strftime('%b %d, %Y'),
             'date_sortable': date.strftime('%Y/%M/%d'),
         }
 
-    def filtering_predicate(self) -> dict:
-        return {
+    def filtering_criterea(self) -> dict:
+        result = {
             'benchmark_name': self.benchmark_name,
-            'device': self.device_name,
+            'device_name': self.device_name,
             # Parts of context:
             'num_cpus': psutil.cpu_count(),
             'build_type': 'debug' if __debug__ else 'release',
         }
+        result.update(self.attributes)
+        return result
 
-    def serialize(self) -> dict:
+    def stats(self) -> dict:
         return {
             'benchmark_name': self.benchmark_name,
             'benchmark_code': inspect.getsource(self.func),
@@ -96,10 +109,20 @@ class MicroBench(object):
             'count_operations': self.count_operations,
             'msecs_per_operation': self.msecs_per_op(),
             'operations_per_second': self.ops_per_sec(),
-        }.update(self.context())
+        }
+
+    def serialize(self) -> dict:
+        result = copy.deepcopy(self.attributes)
+        result.update(self.context())
+        result.update(self.stats())
+        return result
 
     def __dict__(self) -> dict:
         return self.serialize()
+
+    def __iter__(self) -> dict:
+        for k, v in self.serialize().items():
+            yield k, v
 
 # pragma region Running
 
@@ -126,9 +149,14 @@ class MicroBench(object):
                     break
         # Mark as completed.
         self.date_utc = datetime.utcnow()
+        if isinstance(self.source, sf.StatsFile):
+            self.source.upsert(self)
+
+    def did_run(self) -> bool:
+        return self.date_utc is not None
 
     def run_if_missing(self):
-        if self.date_utc is not None:
+        if self.did_run():
             return
         self.run()
 

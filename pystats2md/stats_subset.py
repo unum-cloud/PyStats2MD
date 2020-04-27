@@ -86,16 +86,18 @@ class StatsSubset(object):
     @staticmethod
     def predicate(**filters) -> object:
         def matches(s):
-            for filtered_prpoperty, filter_criterea in filters.items():
-                assert (
-                    filtered_prpoperty is not None), 'Undefined key in the filter'
+            for property_name, filter_criterea in filters.items():
+                assert isinstance(
+                    property_name, str), 'Undefined key in the filter'
                 assert (filter_criterea is not None), 'Undefined value in the filter'
-                current_value = s.get(filtered_prpoperty, None)
+                current_value = s.get(property_name, None)
+
                 if isinstance(filter_criterea, re.Pattern):
-                    if (not filter_criterea.search(current_value)) or \
-                            (not isinstance(current_value, str)):
+                    if not isinstance(current_value, str):
                         return False
-                elif current_value != filter_criterea:
+                    if not filter_criterea.search(current_value):
+                        return False
+                if current_value != filter_criterea:
                     return False
             return True
         return matches
@@ -106,7 +108,8 @@ class StatsSubset(object):
             Returns objects with matching fields.
             Supports regular expressions for filtering critereas.
         """
-        return [s for s in inputs if StatsSubset.predicate(s)]
+        pred = StatsSubset.predicate(**filters)
+        return [s for s in inputs if pred(s)]
 
     @staticmethod
     def compact(inputs, **aggregation_policies) -> dict:
