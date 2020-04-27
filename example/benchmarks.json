@@ -35,25 +35,11 @@
         "date_utc": 1587225817.176546
     },
     {
-        "operations_per_second": 74524.72954281016,
-        "benchmark_name": "Insert Dump",
-        "database_name": "SQLiteMem",
-        "dataset": "Movie Ratings",
-        "date_utc": 1587252858.075692
-    },
-    {
         "operations_per_second": 44137.560960888375,
         "benchmark_name": "Insert Dump",
         "database_name": "SQLite",
         "dataset": "Patent Citations Graph",
         "date_utc": 1586778816.884285
-    },
-    {
-        "operations_per_second": 71887.7210561898,
-        "benchmark_name": "Insert Dump",
-        "database_name": "SQLiteMem",
-        "dataset": "Patent Citations Graph",
-        "date_utc": 1587253087.872632
     },
     {
         "operations_per_second": 14636.071833480026,
@@ -68,20 +54,6 @@
         "database_name": "PostgreSQL",
         "dataset": "Patent Citations Graph",
         "date_utc": 1587257918.68409
-    },
-    {
-        "operations_per_second": 564322.6917055321,
-        "benchmark_name": "Insert Dump",
-        "database_name": "Parsing in Python",
-        "dataset": "Movie Ratings",
-        "date_utc": 1587262353.146857
-    },
-    {
-        "operations_per_second": 617139.1068909153,
-        "benchmark_name": "Insert Dump",
-        "database_name": "Parsing in Python",
-        "dataset": "Patent Citations Graph",
-        "date_utc": 1587262402.240635
     },
     {
         "operations_per_second": 629.0518712711806,

@@ -67,7 +67,9 @@ class StatsSubset(object):
             col_names = list(get_unique(
                 self.dicts_list, col_name_property))
 
-        result = [[''] * len(col_names)] * len(row_names)
+        result = list()
+        for _ in row_names:
+            result.append([None] * len(col_names))
         for s in self.dicts_list:
             if not ((row_name_property in s) and
                     (col_name_property in s) and

@@ -40,6 +40,7 @@ class StatsTable(object):
             else:
                 gain = float(r[column]) / baseline
                 r.append(num2str(gain) + 'x')
+        return self
 
     def add_ranking(self, column=-1) -> StatsTable:
         self.header_row.append(f'Ranking by {self.header_row[column]}')
@@ -59,8 +60,9 @@ class StatsTable(object):
                     r.append(':3rd_place_medal:')
                 else:
                     r.append(f'# {idx + 1}')
+        return self
 
-    def add_emoji(self, column: int, log_scale=False) -> StatsTable:
+    def add_emoji(self, column=-1, log_scale=False) -> StatsTable:
         # https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md
         # https://gist.github.com/AliMD/3344523
         self.header_row.append(f'Good in {self.header_row[column]}')
