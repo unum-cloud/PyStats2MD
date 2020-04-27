@@ -57,27 +57,3 @@ r.print_to('example/example1.md')
 # dataset='Patent Citations Graph',
 # device_name='macbook',
 # ))
-
-assert f.contains(MicroBench(
-    benchmark_name='Insert Dump',
-    func=lambda: print('RUNNING!!!'),
-    database_name='MongoDB',
-    dataset='Patent Citations Graph',
-    device_name='macbook',
-)) == True
-
-assert f.existing_index(MicroBench(
-    benchmark_name='Insert Dump',
-    func=lambda: print('RUNNING!!!'),
-    database_name='MongoDB',
-    dataset='Movie Ratings',
-    device_name='macbook',
-)) == 0
-
-assert f.existing_index(MicroBench(
-    benchmark_name='Insert Dump',
-    func=lambda: print('RUNNING!!!'),
-    database_name='MongoDB',
-    dataset='Patent Citations Graph',
-    device_name='macbook',
-)) == 1

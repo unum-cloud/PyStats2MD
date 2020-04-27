@@ -61,11 +61,11 @@ class StatsSubset(object):
         """
 
         if len(row_names) == 0:
-            row_names = list(get_unique(
-                self.dicts_list, row_name_property))
+            row_names = get_unique(self.dicts_list, row_name_property)
+            row_names = sorted(list(row_names))
         if len(col_names) == 0:
-            col_names = list(get_unique(
-                self.dicts_list, col_name_property))
+            col_names = get_unique(self.dicts_list, col_name_property)
+            col_names = sorted(list(col_names))
 
         result = list()
         for _ in row_names:
