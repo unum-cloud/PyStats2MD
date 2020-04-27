@@ -38,6 +38,7 @@ class StatsTable(object):
 
         column = self._column2index(column)
         self.header_row.append(f'Gains in {self.header_row[column]}')
+
         baseline = self.content[baseline_row][column]
         for i, r in enumerate(self.content):
             if i == baseline_row:
@@ -53,7 +54,9 @@ class StatsTable(object):
         bigger_is_better=True,
     ) -> StatsTable:
 
+        column = self._column2index(column)
         self.header_row.append(f'Ranking by {self.header_row[column]}')
+
         values = [r[column] for r in self.content]
         values = [v for v in values if isinstance(v, (int, float))]
         values = sorted(values, reverse=bigger_is_better)
@@ -79,9 +82,11 @@ class StatsTable(object):
         bigger_is_better=True,
     ) -> StatsTable:
 
+        column = self._column2index(column)
         # https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md
         # https://gist.github.com/AliMD/3344523
         self.header_row.append(f'Good in {self.header_row[column]}')
+
         values = [r[column] for r in self.content]
         values = [v for v in values if isinstance(v, (int, float))]
         if len(values) <= 1:

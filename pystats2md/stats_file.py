@@ -136,7 +136,7 @@ class StatsFile(object):
                 if not bench.did_run():
                     bench.run()
         if not isinstance(bench, dict):
-            bench = bench.__dict__
+            bench = dict(bench)
 
         if bench_idx is None:
             self.benchmarks.append(bench)

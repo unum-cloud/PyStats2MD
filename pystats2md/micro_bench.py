@@ -76,7 +76,7 @@ class MicroBench(object):
         return {
             # Fields matching Google Benchmark:
             # https://github.com/google/benchmark#output-formats
-            'date': date.strftime('%Y/%M/%d-%H:%m:%s'),
+            'date': date.strftime('%Y/%M/%d-%H:%m:%S'),
             'num_cpus': psutil.cpu_count(),
             'mhz_per_cpu': psutil.cpu_freq().current,
             'build_type': 'debug' if __debug__ else 'release',
@@ -89,14 +89,16 @@ class MicroBench(object):
             'date_sortable': date.strftime('%Y/%M/%d'),
         }
 
-    def filtering_criterea(self) -> dict:
+    def filtering_criterea(self, include_context=False) -> dict:
         result = {
             'benchmark_name': self.benchmark_name,
             'device_name': self.device_name,
-            # Parts of context:
-            'num_cpus': psutil.cpu_count(),
-            'build_type': 'debug' if __debug__ else 'release',
         }
+        if include_context:
+            result.update({
+                'num_cpus': psutil.cpu_count(),
+                'build_type': 'debug' if __debug__ else 'release',
+            })
         result.update(self.attributes)
         return result
 
@@ -190,19 +192,16 @@ class MicroBench(object):
         i = '%13.13s' % str(self.count_iterations)
         return f'{n}{t}{o}{i}'
 
-    @property
     def secs_per_op(self) -> float:
         if (self.count_operations == 0):
             return 0
         return self.time_elapsed / self.count_operations
 
-    @property
     def msecs_per_op(self) -> float:
         if (self.count_operations == 0):
             return 0
         return self.secs_per_op() * 1000.0
 
-    @property
     def ops_per_sec(self) -> float:
         if (self.count_operations == 0):
             return 0
