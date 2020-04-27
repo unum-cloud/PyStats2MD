@@ -20,7 +20,7 @@ pip install pystats2md
 
 ### Example 1
 
-Let's assume we are benchmarking databases. We have an array of measurements and each of them is a dictionary with at least 3 keys: `database_name`, `operation_name` and `operations_per_second`. Let's generate a report.
+Let's assume we are benchmarking databases. We have an array of measurements and each of them is a dictionary with at least 3 keys: `database_name`, `benchmark_name` and `operations_per_second`. Let's generate a report.
 
 ```python
 from pystats2md import *
@@ -28,19 +28,19 @@ from pystats2md import *
 f = StatsFile('benchmarks.json')
 r = Report('report.md')
 r.add('#### Following section was auto-generated')
-r.add(f.table(rows='database_name', cols='operation_name', cells='operations_per_second'))
-r.add(f.chart(bars='database_name', ys='operations_per_second').filter(operation_name='insert'))
+r.add(f.table(rows='database_name', cols='benchmark_name', cells='operations_per_second'))
+r.add(f.chart(bars='database_name', ys='operations_per_second').filter(benchmark_name='insert'))
 ```
 
 ### Example 2
 
-A more complex example. The [previous example](#example-1) assumes we have just 1 entry for every combination of `database_name`, `operation_name`. If it's not the case, we can reduce them in-place and also add all kinds of supplementary columns to make results more visually appealing. Just don't get carried away :laughing: 
+A more complex example. The [previous example](#example-1) assumes we have just 1 entry for every combination of `database_name`, `benchmark_name`. If it's not the case, we can reduce them in-place and also add all kinds of supplementary columns to make results more visually appealing. Just don't get carried away :laughing: 
 
 ```python
 r.add('#### Following section was auto-generated')
 r.add(f
-    .group('database_name', 'operation_name', { 'operations_per_second': Aggregation.take_mean }) \
-    .table(rows='database_name', cols='operation_name', cells='operations_per_second') \
+    .group('database_name', 'benchmark_name', { 'operations_per_second': Aggregation.take_mean }) \
+    .table(rows='database_name', cols='benchmark_name', cells='operations_per_second') \
     .add_ranking(column='insert') \
     .add_emoji(column='insert', log_scale=False) \
     .add_gains(column='insert', baseline='SQLite')

@@ -1,53 +1,53 @@
+from __future__ import annotations
 import copy
 import re  # Filtering
 import itertools  # Combinations of grouping keys
 
 from pystats2md.helpers import *
-from pystats2md.stats_table import StatsTable
 from pystats2md.aggregation import Aggregation
-from pystats2md.file import StatsFile
+import pystats2md.stats_file as sf
+import pystats2md.stats_table as st
 
 
 class StatsSubset(object):
 
     def __init__(self, source=None):
         self.dicts_list = list()
+        self.include(source)
 
     def include(self, contents: List[dict]) -> StatsSubset:
-        if isinstance(contents, list):
+        if contents is None:
+            return self
+        elif isinstance(contents, list):
             self.dicts_list.extend(copy.deepcopy(contents))
             return self
-        elif isinstance(contents, StatsFile):
-            self.dicts_list.extend(contents.copy())
+        elif isinstance(contents, sf.StatsFile):
+            self.dicts_list.extend(contents.benchmarks.copy())
             return self
         elif isinstance(contents, str):
-            contents = StatsFile(contents)
-            self.dicts_list.extend(contents.copy())
-            return self
+            return self.include(sf.StatsFile(contents))
 
     def filtered(self, **filters) -> StatsSubset:
-        self.dicts_list = self.filter(self.dicts_list, **filters)
+        self.dicts_list = StatsSubset.filter(self.dicts_list, **filters)
         return self
 
     def compacted(self, **aggregation_policies) -> StatsSubset:
-        self.dicts_list = self.compact(self.dicts_list, **aggregation_policies)
+        self.dicts_list = StatsSubset.compact(
+            self.dicts_list, **aggregation_policies)
         return self
 
     def grouped(self, *grouping_keys, **aggregation_policies) -> StatsSubset:
-        self.dicts_list = self.group(
+        self.dicts_list = StatsSubset.group(
             self.dicts_list, *grouping_keys, **aggregation_policies)
         return self
-
-    def unique_strings_for(self, inputs, key: str) -> Set[str]:
-        return {num2str(s.get(key)) for s in inputs if key in s}
 
     def to_table(
         self,
         row_name_property: str,
         col_name_property: str,
         cell_content_property: str,
-        row_names: List[str],
-        col_names: List[str],
+        row_names: List[str] = [],
+        col_names: List[str] = [],
         include_headers=True,
     ) -> StatsTable:
         """
@@ -60,12 +60,12 @@ class StatsSubset(object):
             we will add all combinations.
         """
 
-        if len(row_names == 0):
-            row_names = self.unique_strings_for(
-                self.dicts_list, row_name_property)
-        if len(col_names == 0):
-            col_names = self.unique_strings_for(
-                self.dicts_list, col_name_property)
+        if len(row_names) == 0:
+            row_names = list(get_unique(
+                self.dicts_list, row_name_property))
+        if len(col_names) == 0:
+            col_names = list(get_unique(
+                self.dicts_list, col_name_property))
 
         result = [[''] * len(col_names)] * len(row_names)
         for s in self.dicts_list:
@@ -78,15 +78,12 @@ class StatsSubset(object):
             if (idx_row is None) or (idx_col is None):
                 continue
             result[idx_row][idx_col] = s.get(cell_content_property, None)
-        return StatsTable(content=result, header_row=col_names, header_col=row_names)
 
-    def filter(self, inputs, **filters) -> List[dict]:
-        """
-            Returns objects with matching fields.
-            Supports regular expressions for filtering critereas.
-        """
-        # Define filtering predicate.
-        def matches(s: dict) -> bool:
+        return st.StatsTable(content=result, header_row=col_names, header_col=row_names)
+
+    @staticmethod
+    def predicate(**filters) -> object:
+        def matches(s):
             for filtered_prpoperty, filter_criterea in filters.items():
                 assert (
                     filtered_prpoperty is not None), 'Undefined key in the filter'
@@ -99,10 +96,18 @@ class StatsSubset(object):
                 elif current_value != filter_criterea:
                     return False
             return True
-        # Actual filtering.
-        return [s for s in inputs if matches(s)]
+        return matches
 
-    def compact(self, inputs, **aggregation_policies) -> dict:
+    @staticmethod
+    def filter(inputs, **filters) -> List[dict]:
+        """
+            Returns objects with matching fields.
+            Supports regular expressions for filtering critereas.
+        """
+        return [s for s in inputs if StatsSubset.predicate(s)]
+
+    @staticmethod
+    def compact(inputs, **aggregation_policies) -> dict:
         """
             Reduces all the dictionaries in this subset by applying
             specified policies to every key in the range.
@@ -123,7 +128,8 @@ class StatsSubset(object):
 
         return reduced_dict
 
-    def group(self, inputs, *grouping_keys, **aggregation_policies) -> List[dict]:
+    @staticmethod
+    def group(inputs, *grouping_keys, **aggregation_policies) -> List[dict]:
         """
             Grouping is filtering and compaction chained togethers.
             First we identify all unique combinations of `grouping_keys`.
@@ -131,15 +137,15 @@ class StatsSubset(object):
             Once those groups are formed, we `compact()` them into single entries.
         """
         result = list()
-        values_per_key = [self.unique_strings_for(
+        values_per_key = [StatsSubset.get_unique(
             inputs, k) for k in grouping_keys]
 
         for combo in itertools.product(*values_per_key):
             combo_filter = dict()
             for i, k in enumerate(grouping_keys):
                 combo_filter[k] = combo[i]
-            matching_stats = self.filter(inputs, **combo_filter)
-            reduced_stats = self.compact(
+            matching_stats = StatsSubset.filter(inputs, **combo_filter)
+            reduced_stats = StatsSubset.compact(
                 matching_stats, **aggregation_policies)
             result.append(reduced_stats)
 

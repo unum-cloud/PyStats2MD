@@ -1,5 +1,7 @@
+from __future__ import annotations
 import math
 import random
+from typing import Optional, List
 
 from pystats2md.helpers import *
 
@@ -12,6 +14,11 @@ class StatsTable(object):
         header_row: Optional[List[str]],
         header_col: Optional[List[str]],
     ):
+        assert isinstance(content, list)
+        if header_row is not None:
+            assert isinstance(header_row, list)
+        if header_col is not None:
+            assert isinstance(header_col, list)
         self.content = content
         self.header_row = header_row
         self.header_col = header_col

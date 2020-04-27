@@ -19,6 +19,10 @@ def str2num(str_: str) -> float:
     return float(str_)
 
 
+def get_unique(dicts: list, key: str) -> Set[str]:
+    return {num2str(s.get(key)) for s in dicts if key in s}
+
+
 def index_of(vs: List[object], v: object) -> Optional[int]:
     try:
         return vs.index(v)

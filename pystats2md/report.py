@@ -1,4 +1,5 @@
 # Exports data from `stats.json` to `stats.md` in human-readable form.
+from __future__ import annotations
 from typing import List, Optional
 import json
 import copy
