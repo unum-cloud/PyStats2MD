@@ -128,7 +128,7 @@ class StatsTable(object):
                 cool_empjis = [':fire:', ':strawberry:', ':underage:']
                 icon = random.choice(cool_empjis)
                 r.append(icon * 3)
-
+                continue
             #
             is_good = (val >= biggest_bracket) if bigger_is_better else (
                 val <= worst_bracket)
