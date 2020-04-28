@@ -2,6 +2,7 @@ from __future__ import annotations
 import math
 import random
 from typing import Optional, List
+import copy
 
 from pystats2md.helpers import *
 
@@ -19,9 +20,9 @@ class StatsTable(object):
             assert isinstance(header_row, list)
         if header_col is not None:
             assert isinstance(header_col, list)
-        self.content = content
-        self.header_row = header_row
-        self.header_col = header_col
+        self.content = copy.deepcopy(content)
+        self.header_row = copy.deepcopy(header_row)
+        self.header_col = copy.deepcopy(header_col)
 
     def _column2index(self, column: str) -> int:
         if isinstance(column, int):

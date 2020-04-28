@@ -29,7 +29,7 @@ class MicroBench(object):
         serialized=None,
         limit_iterations=1000,
         limit_operations=10000,
-        limit_seconds=1.0,
+        limit_seconds=10.0,
         **kwargs,
     ):
         """
@@ -140,13 +140,13 @@ class MicroBench(object):
             self.time_elapsed = time.time() - before
 
             # Stop if we have reached any limit.
-            if self.limit_operations:
+            if self.limit_operations is not None:
                 if self.limit_operations <= self.count_operations:
                     break
-            if self.limit_iterations:
+            if self.limit_iterations is not None:
                 if self.limit_iterations <= self.count_iterations:
                     break
-            if self.limit_seconds:
+            if self.limit_seconds is not None:
                 if self.limit_seconds <= self.time_elapsed:
                     break
         # Mark as completed.
