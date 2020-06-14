@@ -23,15 +23,21 @@ class StatsFile(object):
 
 # pragma region Serialization
 
-    def __init__(self, filename='tmp/stats.json'):
+    def __init__(self, filename=None):
         self.filename = filename
         self.benchmarks = list()
         self.context = dict()
         self.reset_from_file(self.filename)
 
+    def append(self, file: StatsFile):
+        self.benchmarks.extend(file.benchmarks)
+
     def reset_from_file(self, filename=None):
         if filename is None:
             filename = self.filename
+            if filename is None:
+                return
+
         if not path.exists(filename):
             self.benchmarks = list()
             self.context = dict()
