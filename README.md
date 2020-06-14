@@ -57,7 +57,7 @@ If you need even more control, you can manually build `StatsSubset` from `StatsF
 
 ## Related Projects
 
-* [PyGraphDB](https://github.com/unumxyz/PyGraphDB) lib for persistent graph data structures.
+* [PyWrappedDBs](https://github.com/unumxyz/PyWrappedDBs) lib for persistent graph data structures.
 * [Unum](https://unum.xyz) high-performance GPU-accelerated general-purpose framework.
 
 ## TODO
