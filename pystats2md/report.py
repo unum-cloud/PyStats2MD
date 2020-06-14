@@ -4,6 +4,10 @@ from typing import List, Optional
 import json
 import copy
 import math
+import platform
+import inspect
+
+import psutil
 
 from pystats2md.stats_table import StatsTable
 from pystats2md.stats_plot import StatsPlot
@@ -35,7 +39,8 @@ class Report(object):
     def add_text(self, text: str) -> Report:
         assert isinstance(text, str)
         # Remove whitespaces in front of every row.
-        text = '\n'.join([line.strip() for line in text.splitlines()])
+        # text = '\n'.join([line.strip() for line in text.splitlines()])
+        text = inspect.cleandoc(text)
         self.current_content += f'{text}\n'
         # Headers must have 2 line spacings.
         if text.startswith('#'):
@@ -54,4 +59,18 @@ class Report(object):
         # put_into_directory()
         # self.current_content += f'![{obj.name}]({filename})'
         # self.current_content += '\n\n'
+        return self
+
+    def add_current_device_specs(self) -> Report:
+        cores = psutil.cpu_count(logical=False)
+        threads = psutil.cpu_count(logical=True)
+        frequency = psutil.cpu_freq().min
+        ram_gbs = psutil.virtual_memory().total / (2 ** 30)
+        disk_gbs = psutil.disk_usage('/').total / (2 ** 30)
+        self.add(f'''
+        * CPU: {cores} cores, {threads} threads @ {frequency:.2f} Mhz.
+        * RAM: {ram_gbs:.2f} Gb
+        * Disk: {disk_gbs:.2f} Gb
+        * OS: {platform.system()}
+        ''')
         return self
