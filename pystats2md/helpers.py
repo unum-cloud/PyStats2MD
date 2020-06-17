@@ -10,9 +10,9 @@ def secs2str(num: float) -> str:
     mins = (num % 3600) // 60
     secs = (num % 3600) % 60
     if hours > 0:
-        return f'{hours} hours, {mins} mins'
+        return '{:,.0f} hours, {:,.0f} mins'.format(hours, mins)
     else:
-        return f'{mins} mins, {secs} secs'
+        return '{:,.0f} mins, {:,.0f} secs'.format(mins, secs)
 
 
 def bytes2str(num: int) -> str:

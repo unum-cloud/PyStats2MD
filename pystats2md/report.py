@@ -43,8 +43,7 @@ class Report(object):
         text = inspect.cleandoc(text)
         self.current_content += f'{text}\n'
         # Headers must have 2 line spacings.
-        if text.startswith('#'):
-            self.current_content += '\n'
+        self.current_content += '\n\n'
         return self
 
     def add_table(self, obj: StatsTable) -> Report:

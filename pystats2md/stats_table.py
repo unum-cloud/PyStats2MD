@@ -164,9 +164,10 @@ class StatsTable(object):
             Transforms the number in each cell from seconds 
             to more readable number of hours and minutes.
         """
-        for row in self.content:
-            for cell in row:
-                cell = secs2str(cell)
+        for row_idx, row in enumerate(self.content):
+            for cell_idx, cell in enumerate(row):
+                row[cell_idx] = secs2str(cell)
+            self.content[row_idx] = row
         return self
 
     def printable_bytes(self) -> StatsTable:
@@ -174,7 +175,8 @@ class StatsTable(object):
             Transforms the number in each cell from bytes 
             to more readable number of Gb, Mb & Kb...
         """
-        for row in self.content:
-            for cell in row:
-                cell = bytes2str(cell)
+        for row_idx, row in enumerate(self.content):
+            for cell_idx, cell in enumerate(row):
+                row[cell_idx] = bytes2str(cell)
+            self.content[row_idx] = row
         return self
