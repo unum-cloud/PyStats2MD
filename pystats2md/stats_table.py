@@ -158,3 +158,23 @@ class StatsTable(object):
             result[idx_row+1].extend(content_strs[idx_row])
 
         return table2str(result)
+
+    def printable_seconds(self) -> StatsTable:
+        """
+            Transforms the number in each cell from seconds 
+            to more readable number of hours and minutes.
+        """
+        for row in self.content:
+            for cell in row:
+                cell = secs2str(cell)
+        return self
+
+    def printable_bytes(self) -> StatsTable:
+        """
+            Transforms the number in each cell from bytes 
+            to more readable number of Gb, Mb & Kb...
+        """
+        for row in self.content:
+            for cell in row:
+                cell = bytes2str(cell)
+        return self

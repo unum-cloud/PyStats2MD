@@ -1,5 +1,28 @@
 from __future__ import annotations
-from typing import List
+from typing import List, Optional, Set
+
+
+def secs2str(num: float) -> str:
+    # import datetime
+    # def secs2str(num: float) -> str:
+    #     return str(datetime.timedelta(seconds=num))
+    hours = num // 3600
+    mins = (num % 3600) // 60
+    secs = (num % 3600) % 60
+    if hours > 0:
+        return f'{hours} hours, {mins} mins'
+    else:
+        return f'{mins} mins, {secs} secs'
+
+
+def bytes2str(num: int) -> str:
+    power = 2**10  # 2**10 = 1024
+    n = 0
+    power_labels = {0: '', 1: 'K', 2: 'M', 3: 'G', 4: 'T'}
+    while num > power:
+        num /= power
+        n += 1
+    return f'{num} {power_labels[n]}b'
 
 
 def num2str(num: float) -> str:
