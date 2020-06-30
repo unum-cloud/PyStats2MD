@@ -3,9 +3,14 @@ from typing import List, Optional, Set
 
 
 def secs2str(num: float) -> str:
-    # import datetime
-    # def secs2str(num: float) -> str:
-    #     return str(datetime.timedelta(seconds=num))
+    if not isinstance(num, float):
+        if isinstance(num, int):
+            num = float(num)
+        elif isinstance(num, str):
+            num = float(num)
+        else:
+            return ''
+
     hours = num // 3600
     mins = (num % 3600) // 60
     secs = (num % 3600) % 60
@@ -16,6 +21,14 @@ def secs2str(num: float) -> str:
 
 
 def bytes2str(num: int) -> str:
+    if not isinstance(num, int):
+        if isinstance(num, float):
+            num = int(num)
+        elif isinstance(num, str):
+            num = int(num)
+        else:
+            return ''
+
     power = 2**10  # 2**10 = 1024
     n = 0
     power_labels = {0: '', 1: 'K', 2: 'M', 3: 'G', 4: 'T'}
@@ -23,6 +36,22 @@ def bytes2str(num: int) -> str:
         num /= power
         n += 1
     return f'{num} {power_labels[n]}b'
+
+
+def metric2str(num: float, decimal_places=1) -> str:
+    if not isinstance(num, float):
+        if isinstance(num, int):
+            num = float(num)
+        elif isinstance(num, str):
+            num = float(num)
+        else:
+            return ''
+
+    for unit in ['', 'K', 'M', 'G', 'T']:
+        if num < 1000.0:
+            break
+        num /= 1000.0
+    return f'{num:.{decimal_places}f} {unit}'
 
 
 def num2str(num: float) -> str:
