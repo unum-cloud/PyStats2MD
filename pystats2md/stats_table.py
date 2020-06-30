@@ -41,11 +41,16 @@ class StatsTable(object):
         self.header_row.append(f'Gains in {self.header_row[column]}')
 
         baseline = self.content[baseline_row][column]
+        multipliers = [float(r[column] if (r[column] is not None) else 0) / baseline for r in self.content]
+        biggest = max(multipliers)
+
         for i, r in enumerate(self.content):
+            gain = multipliers[i]
             if i == baseline_row:
                 r.append(f'1x')
+            elif gain == biggest:
+                r.append('**' + num2str(gain) + 'x**')
             else:
-                gain = float(r[column]) / baseline
                 r.append(num2str(gain) + 'x')
         return self
 
