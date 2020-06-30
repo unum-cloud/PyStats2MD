@@ -151,6 +151,9 @@ class StatsFile(object):
 
 # pragma region Shortcuts
 
+    def subset(self) -> ss.StatsSubset:
+        return ss.StatsSubset(source=self)
+
     def filtered(self, *vargs, **kwargs) -> ss.StatsSubset:
         return ss.StatsSubset(source=self).filtered(*vargs, **kwargs)
 

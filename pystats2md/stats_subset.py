@@ -41,6 +41,9 @@ class StatsSubset(object):
             self.dicts_list, *grouping_keys, **aggregation_policies)
         return self
 
+    def unique(self, field: str) -> List[str]:
+        return sorted(list(get_unique(self.dicts_list, field)))
+
     def to_table(
         self,
         row_name_property: str,
@@ -61,11 +64,9 @@ class StatsSubset(object):
         """
 
         if len(row_names) == 0:
-            row_names = get_unique(self.dicts_list, row_name_property)
-            row_names = sorted(list(row_names))
+            row_names = self.unique(row_name_property)
         if len(col_names) == 0:
-            col_names = get_unique(self.dicts_list, col_name_property)
-            col_names = sorted(list(col_names))
+            col_names = self.unique(col_name_property)
 
         result = list()
         for _ in row_names:
