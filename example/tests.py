@@ -6,7 +6,7 @@ from pystats2md.stats_subset import *
 from pystats2md.stats_file import *
 from pystats2md.micro_bench import *
 
-f = StatsFile('example/benchmarks.json')
+f = StatsFile('example/tests.json')
 
 assert f.contains(MicroBench(
     benchmark_name='Insert Dump',
