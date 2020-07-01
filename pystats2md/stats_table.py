@@ -6,6 +6,7 @@ import copy
 
 from pystats2md.helpers import *
 from pystats2md.aggregation import Aggregation
+from pystats2md.stats_plot import StatsPlot
 
 
 class StatsTable(object):
@@ -47,24 +48,38 @@ class StatsTable(object):
         else:
             return 0
 
-    def _numerics_in_col(self, col) -> List[float]:
-        vs = [r[col] for r in self.content]
-        vs = [v for v in vs if isinstance(v, (int, float))]
-        return list(vs)
+    def _only_numerics(self, vals: list) -> list:
+        return [v for v in vals if isinstance(v, (int, float))]
 
-    def _numerics_in_row(self, row) -> List[float]:
-        vs = self.content[row]
-        vs = [v for v in vs if isinstance(v, (int, float))]
-        return list(vs)
+    def _only_col(self, col) -> List[float]:
+        return [r[col] for r in self.content]
+
+    def _only_row(self, row) -> List[float]:
+        return self.content[row]
 
     def _column_title_and_values(self, col=None) -> (str, list):
         if col is None:
-            vs = map(self._numerics_in_row, range(self.rows()))
+            vs = map(self._only_row, range(self.rows()))
+            vs = map(self._only_numerics, vs)
             vs = map(Aggregation.take_mean, vs)
             return 'Mean', list(vs)
         else:
             col = self._column2index(col)
-            return self.header_row[col], self._numerics_in_col(col)
+            return self.header_row[col], self._only_col(col)
+
+    def normalize_values_in_column(self, column: int) -> StatsTable:
+        col_idx = self._column2index(column)
+        _, values = self._column_title_and_values(column)        
+        biggest_val = max(values)
+
+        for i, r in enumerate(self.content):
+            r[col_idx] = values[i] / biggest_val            
+        return self
+
+    def normalize_values(self) -> StatsTable:
+        for i in range(self.cols()):
+            self.normalize_values_in_column(i)
+        return self
 
     def add_gains(
         self,
@@ -215,3 +230,6 @@ class StatsTable(object):
                 row[cell_idx] = bytes2str(cell)
             self.content[row_idx] = row
         return self
+
+    def plot(self, **kwargs) -> StatsPlot:
+        return StatsPlot(table=self, **kwargs)

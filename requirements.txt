@@ -1,0 +1,6 @@
+# Printing system specs:
+psutil
+# Rendering charts:
+plotly
+plotly-orca
+nbformat

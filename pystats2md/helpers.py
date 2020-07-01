@@ -1,5 +1,7 @@
 from __future__ import annotations
 from typing import List, Optional, Set
+from random import choice
+from string import ascii_lowercase
 
 
 def secs2str(num: float) -> str:
@@ -97,3 +99,6 @@ def table2str(table: List[List[str]]) -> str:
             delimeters = [':---'] + [':---:'] * (len(cells) - 1)
             lines.append(render_line(delimeters))
     return '\n'.join(lines)
+
+def random_str(letters: int = 8) -> str:
+    return ''.join(choice(ascii_lowercase) for i in range(letters))

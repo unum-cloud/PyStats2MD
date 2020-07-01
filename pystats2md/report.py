@@ -6,6 +6,8 @@ import copy
 import math
 import platform
 import inspect
+from pathlib import Path
+from urllib.parse import quote
 
 import psutil
 
@@ -16,13 +18,19 @@ from pystats2md.stats_plot import StatsPlot
 class Report(object):
 
     def __init__(self):
-        self.current_content = ''
+        self.content = ''
+        self.attachments = {}
 
     def print_to(self, filename: str, overwrite=True) -> Report:
         text_file = open(filename, 'w' if overwrite else 'a')
-        text_file.write(self.current_content)
+        text_file.write(self.content)
         text_file.close()
-        self.current_content = ''
+
+        for name, obj in self.attachments.items():
+            obj_path = Path(filename).parent / f'{name}.svg'
+            obj.save_to(str(obj_path))
+
+        self.content = ''
         return self
 
     def add(self, obj: object) -> Report:
@@ -30,8 +38,8 @@ class Report(object):
             return self.add_text(obj)
         elif isinstance(obj, StatsTable):
             return self.add_table(obj)
-        elif isinstance(obj, StatsTable):
-            return self.add_table(obj)
+        elif isinstance(obj, StatsPlot):
+            return self.add_plot(obj)
         else:
             assert False, 'Unknown type!'
             return self
@@ -41,23 +49,25 @@ class Report(object):
         # Remove whitespaces in front of every row.
         # text = '\n'.join([line.strip() for line in text.splitlines()])
         text = inspect.cleandoc(text)
-        self.current_content += f'{text}\n'
+        self.content += f'{text}\n'
         # Headers must have 2 line spacings.
-        self.current_content += '\n\n'
+        self.content += '\n\n'
         return self
 
     def add_table(self, obj: StatsTable) -> Report:
         assert isinstance(obj, StatsTable)
-        self.current_content += obj.print()
-        self.current_content += '\n\n'
+        self.content += obj.print()
+        self.content += '\n\n'
         return self
 
     def add_plot(self, obj: StatsPlot) -> Report:
         assert isinstance(obj, StatsPlot)
-        # filename = random_name()
-        # put_into_directory()
-        # self.current_content += f'![{obj.name}]({filename})'
-        # self.current_content += '\n\n'
+        self.attachments[obj.title] = obj
+        self.content += '![{}]({}.svg)'.format(
+            obj.title,
+            quote(obj.title),
+        )
+        self.content += '\n\n'
         return self
 
     def add_current_device_specs(self) -> Report:
