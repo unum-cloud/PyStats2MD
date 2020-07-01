@@ -3,6 +3,7 @@ from pystats2md.stats_subset import *
 from pystats2md.stats_file import *
 from pystats2md.report import *
 from pystats2md.micro_bench import *
+from pystats2md.aggregation import *
 
 f = StatsFile('example/benchmarks.json')
 r = Report()
@@ -22,7 +23,7 @@ r.add(f.table(
     rows='database_name',
     cols='benchmark_name',
     cells='operations_per_second',
-).add_emoji())
+).add_emoji(impressive_gain=1.5))
 
 r.add('## Or a ranking?')
 
@@ -30,7 +31,7 @@ r.add(f.table(
     rows='database_name',
     cols='benchmark_name',
     cells='operations_per_second',
-).add_ranking())
+).add_ranking(column='Upsert Entry'))
 
 r.add('## Define a baseline and see the gains!')
 
@@ -55,6 +56,11 @@ r.print_to('example/README.md')
 #     f.benchmarks,
 #     benchmark_name='Insert Dump',
 # database_name='MongoDB',
-# dataset='Patent Citations Graph',
+# dataset_name='Patent Citations Graph',
 # device_name='macbook',
 # ))
+
+print(StatsSubset(f).grouped(
+    *['database_name', 'benchmark_name'], 
+    **{'operations_per_second': Aggregation.take_mean}
+).dicts_list)

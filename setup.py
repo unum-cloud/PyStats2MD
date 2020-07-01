@@ -5,7 +5,7 @@ from setuptools import setup
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 setup(
     name='PyStats2MD',
@@ -17,7 +17,7 @@ setup(
 
     ''',
     long_description=long_description,
-    packages=['pystats2md'],
+    packages=['PyStats2MD'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

@@ -6,7 +6,7 @@
         "operations_per_second": 14832.763843061994,
         "benchmark_name": "Insert Dump",
         "database_name": "MongoDB",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587253283.561088
     },
     {
@@ -16,7 +16,7 @@
         "operations_per_second": 14199.873269296664,
         "benchmark_name": "Insert Dump",
         "database_name": "MongoDB",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587254446.993406
     },
     {
@@ -26,7 +26,7 @@
         "operations_per_second": 7174.144231527759,
         "benchmark_name": "Insert Dump",
         "database_name": "PostgreSQL",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587252342.220738
     },
     {
@@ -36,7 +36,7 @@
         "operations_per_second": 57372.49692420561,
         "benchmark_name": "Insert Dump",
         "database_name": "SQLite",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587219377.904475
     },
     {
@@ -46,7 +46,7 @@
         "operations_per_second": 23981.463695822953,
         "benchmark_name": "Insert Dump",
         "database_name": "MySQL",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587225817.176546
     },
     {
@@ -56,7 +56,7 @@
         "operations_per_second": 44137.560960888375,
         "benchmark_name": "Insert Dump",
         "database_name": "SQLite",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1586778816.884285
     },
     {
@@ -66,7 +66,7 @@
         "operations_per_second": 14636.071833480026,
         "benchmark_name": "Insert Dump",
         "database_name": "MySQL",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587255576.975669
     },
     {
@@ -76,7 +76,7 @@
         "operations_per_second": 7230.858846955488,
         "benchmark_name": "Insert Dump",
         "database_name": "PostgreSQL",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587257918.68409
     },
     {
@@ -86,7 +86,7 @@
         "operations_per_second": 629.0518712711806,
         "benchmark_name": "Find Entry",
         "database_name": "SQLite",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587290014.320845
     },
     {
@@ -96,7 +96,7 @@
         "operations_per_second": 585.8905705582245,
         "benchmark_name": "Remove Entry",
         "database_name": "SQLite",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587290127.494958
     },
     {
@@ -106,7 +106,7 @@
         "operations_per_second": 435.48377785798795,
         "benchmark_name": "Upsert Entry",
         "database_name": "SQLite",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587290138.97658
     },
     {
@@ -116,7 +116,7 @@
         "operations_per_second": 757.0467569738374,
         "benchmark_name": "Find Entry",
         "database_name": "MySQL",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587290153.343367
     },
     {
@@ -126,7 +126,7 @@
         "operations_per_second": 2503.3417249484028,
         "benchmark_name": "Find Entry",
         "database_name": "MongoDB",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587289968.512064
     },
     {
@@ -136,7 +136,7 @@
         "operations_per_second": 1310.843055391825,
         "benchmark_name": "Remove Entry",
         "database_name": "MongoDB",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587290008.43645
     },
     {
@@ -146,7 +146,7 @@
         "operations_per_second": 3064.8789453254703,
         "benchmark_name": "Upsert Entry",
         "database_name": "MongoDB",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587290010.067961
     },
     {
@@ -156,7 +156,7 @@
         "operations_per_second": 643.8068063835956,
         "benchmark_name": "Remove Entry",
         "database_name": "MySQL",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587290280.372442
     },
     {
@@ -166,7 +166,7 @@
         "operations_per_second": 607.0289084306962,
         "benchmark_name": "Upsert Entry",
         "database_name": "MySQL",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587290288.609471
     },
     {
@@ -176,7 +176,7 @@
         "operations_per_second": 495.16020116638725,
         "benchmark_name": "Find Entry",
         "database_name": "PostgreSQL",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587290301.127451
     },
     {
@@ -186,7 +186,7 @@
         "operations_per_second": 1093.0975346573327,
         "benchmark_name": "Remove Entry",
         "database_name": "PostgreSQL",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587290383.536801
     },
     {
@@ -196,7 +196,7 @@
         "operations_per_second": 631.4657504041073,
         "benchmark_name": "Upsert Entry",
         "database_name": "PostgreSQL",
-        "dataset": "Movie Ratings",
+        "dataset_name": "Movie Ratings",
         "date_utc": 1587290391.455016
     },
     {
@@ -206,7 +206,7 @@
         "operations_per_second": 1373.8825320582112,
         "benchmark_name": "Find Entry",
         "database_name": "MongoDB",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291333.202728
     },
     {
@@ -216,7 +216,7 @@
         "operations_per_second": 572.7681876633856,
         "benchmark_name": "Remove Entry",
         "database_name": "MongoDB",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291344.756669
     },
     {
@@ -226,7 +226,7 @@
         "operations_per_second": 2516.6604164729106,
         "benchmark_name": "Upsert Entry",
         "database_name": "MongoDB",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291346.74369
     },
     {
@@ -236,7 +236,7 @@
         "operations_per_second": 487.21405546682155,
         "benchmark_name": "Find Entry",
         "database_name": "SQLite",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291357.706778
     },
     {
@@ -246,7 +246,7 @@
         "operations_per_second": 469.2586693451033,
         "benchmark_name": "Remove Entry",
         "database_name": "SQLite",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291406.496276
     },
     {
@@ -256,7 +256,7 @@
         "operations_per_second": 372.24490398694564,
         "benchmark_name": "Upsert Entry",
         "database_name": "SQLite",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291419.928629
     },
     {
@@ -266,7 +266,7 @@
         "operations_per_second": 649.4206423379183,
         "benchmark_name": "Find Entry",
         "database_name": "MySQL",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291436.501633
     },
     {
@@ -276,7 +276,7 @@
         "operations_per_second": 885.597611753938,
         "benchmark_name": "Remove Entry",
         "database_name": "MySQL",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291448.279052
     },
     {
@@ -286,7 +286,7 @@
         "operations_per_second": 373.24228661374485,
         "benchmark_name": "Upsert Entry",
         "database_name": "MySQL",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291461.675541
     },
     {
@@ -296,7 +296,7 @@
         "operations_per_second": 689.9427326529155,
         "benchmark_name": "Find Entry",
         "database_name": "PostgreSQL",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291486.733521
     },
     {
@@ -306,7 +306,7 @@
         "operations_per_second": 897.673110582144,
         "benchmark_name": "Remove Entry",
         "database_name": "PostgreSQL",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291499.830328
     },
     {
@@ -316,7 +316,7 @@
         "operations_per_second": 547.8492141924721,
         "benchmark_name": "Upsert Entry",
         "database_name": "PostgreSQL",
-        "dataset": "Patent Citations Graph",
+        "dataset_name": "Patent Citations Graph",
         "date_utc": 1587291508.957203
     }
 ]

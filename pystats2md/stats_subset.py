@@ -72,6 +72,7 @@ class StatsSubset(object):
         for _ in row_names:
             result.append([None] * len(col_names))
         for s in self.dicts_list:
+            # The `s` dictionary must have all the request fields to be included.
             if not ((row_name_property in s) and
                     (col_name_property in s) and
                     (cell_content_property in s)):
@@ -143,8 +144,7 @@ class StatsSubset(object):
             Once those groups are formed, we `compact()` them into single entries.
         """
         result = list()
-        values_per_key = [StatsSubset.get_unique(
-            inputs, k) for k in grouping_keys]
+        values_per_key = [get_unique(inputs, k) for k in grouping_keys]
 
         for combo in itertools.product(*values_per_key):
             combo_filter = dict()
@@ -153,6 +153,7 @@ class StatsSubset(object):
             matching_stats = StatsSubset.filter(inputs, **combo_filter)
             reduced_stats = StatsSubset.compact(
                 matching_stats, **aggregation_policies)
+            reduced_stats = {**reduced_stats, **combo_filter}
             result.append(reduced_stats)
 
         return result
