@@ -17,11 +17,11 @@ class Aggregation(object):
 
     @staticmethod
     def take_max(vals) -> float:
-        return min(vals)
+        return max(vals)
 
     @staticmethod
     def take_sum(vals) -> float:
-        return min(vals)
+        return sum(vals)
 
     @staticmethod
     def take_mean(vals) -> float:

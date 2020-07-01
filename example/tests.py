@@ -6,7 +6,7 @@ from pystats2md.stats_subset import *
 from pystats2md.stats_file import *
 from pystats2md.micro_bench import *
 
-f = StatsFile('example/tests.json')
+f = StatsFile('example/benchmarks.json')
 
 assert f.contains(MicroBench(
     benchmark_name='Insert Dump',
@@ -32,10 +32,10 @@ assert f.existing_index(MicroBench(
     device_name='macbook',
 )) == 1
 
-b = MicroBench(
-    benchmark_name='Random Sine',
-    device_name='macbook',
-    func=lambda: math.sin(random.random()),
-)
-f.upsert(b)
-f.dump_to_file()
+# b = MicroBench(
+#     benchmark_name='Random Sine',
+#     device_name='macbook',
+#     func=lambda: math.sin(random.random()),
+# )
+# f.upsert(b)
+# f.dump_to_file()

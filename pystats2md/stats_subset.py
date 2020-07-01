@@ -44,7 +44,7 @@ class StatsSubset(object):
     def unique(self, field: str) -> List[str]:
         return sorted(list(get_unique(self.dicts_list, field)))
 
-    def to_table(
+    def table(
         self,
         row_name_property: str,
         col_name_property: str,

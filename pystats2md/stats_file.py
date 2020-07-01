@@ -13,6 +13,7 @@ from pathlib import Path
 import pystats2md.micro_bench as mb
 import pystats2md.stats_subset as ss
 import pystats2md.stats_table as st
+import pystats2md.aggregation as a
 
 
 class StatsFile(object):
@@ -158,11 +159,21 @@ class StatsFile(object):
         return ss.StatsSubset(source=self).filtered(*vargs, **kwargs)
 
     def table(self, rows: str, cols: str, cells: str):
-        return ss.StatsSubset(source=self).to_table(
+        return ss.StatsSubset(source=self).table(
             row_name_property=rows,
             col_name_property=cols,
             cell_content_property=cells,
         )
 
-    def plot(self, *vargs, **kwargs):
-        return
+    def plot(self, title: str, variants: str, groups: str, values: str, aggregator=a.Aggregation.take_mean, **kwargs):
+        return ss.StatsSubset(source=self).grouped(
+            *[variants, groups],
+            **{values: aggregator}
+        ).table(
+            row_name_property=variants,
+            col_name_property=groups,
+            cell_content_property=values,
+        ).plot(
+            title=title,
+            **kwargs,
+        )

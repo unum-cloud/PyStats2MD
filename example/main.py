@@ -35,7 +35,7 @@ r.add(f.table(
 
 r.add('## Define a baseline and see the gains!')
 
-r.add(StatsSubset(f).to_table(
+r.add(StatsSubset(f).table(
     row_name_property='database_name',
     col_name_property='benchmark_name',
     cell_content_property='operations_per_second',
@@ -43,30 +43,26 @@ r.add(StatsSubset(f).to_table(
     col_names=['Find Entry'],
 ).add_gains())
 
+r.add('## Render charts with Plotly!')
 
-
-r.add(StatsSubset(f).grouped(
-    *['database_name', 'benchmark_name'], 
-    **{'operations_per_second': Aggregation.take_max}
-).to_table(
-    row_name_property='database_name',
-    col_name_property='benchmark_name',
-    cell_content_property='operations_per_second',
-).plot(
-    title='DB Performance', 
+r.add(f.plot(
+    title='DB Performance (Ops/Sec)',
+    variants='database_name',
+    groups='benchmark_name',
+    values='operations_per_second',
     show_values=True,
 ))
 
 r.add(StatsSubset(f).grouped(
-    *['database_name', 'benchmark_name'], 
+    *['database_name', 'benchmark_name'],
     **{'operations_per_second': Aggregation.take_mean}
-).to_table(
+).table(
     row_name_property='database_name',
     col_name_property='benchmark_name',
     cell_content_property='operations_per_second',
     row_names=['SQLite', 'MySQL', 'PostgreSQL', 'MongoDB'],
 ).normalize_values().plot(
-    title='DB Performance (Normalized)', 
+    title='DB Performance (Normalized)',
     show_values=False,
 ))
 
