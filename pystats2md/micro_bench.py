@@ -132,8 +132,8 @@ class MicroBench(object):
 
             'read_bytes': disk.read_bytes,
             'write_bytes': disk.write_bytes,
-            'read_requests': net.read_count,
-            'write_requests': net.write_count,
+            'read_requests': disk.read_count,
+            'write_requests': disk.write_count,
         }
 
     def io(self) -> dict:

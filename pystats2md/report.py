@@ -1,10 +1,6 @@
-# Exports data from `stats.json` to `stats.md` in human-readable form.
 from __future__ import annotations
 from typing import List, Optional
-import json
-import copy
-import math
-import platform
+import platform, sys
 import inspect
 from pathlib import Path
 import re
@@ -87,6 +83,8 @@ class Report(object):
         cpu_frequency = metric2str(psutil.cpu_freq().min * 1e6)
         ram_gbs = bytes2str(psutil.virtual_memory().total)
         disk_gbs = bytes2str(psutil.disk_usage('/').total)
+        python_v = sys.version_info
+
         self.add(f'''
         * CPU:
             * Model: `{cpu_model}`.
@@ -94,6 +92,6 @@ class Report(object):
         * RAM Space: {ram_gbs}.
         * Disk Space: {disk_gbs}.
         * OS Family: {platform.system()}.
-        * Python Version: {platform.sys.version}.
+        * Python Version: {python_v[0]}.{python_v[1]}.{python_v[2]}.
         ''')
         return self
