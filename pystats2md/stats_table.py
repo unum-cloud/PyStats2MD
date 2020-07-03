@@ -89,16 +89,20 @@ class StatsTable(object):
 
         title, values = self._column_title_and_values(column)
         baseline = values[baseline_row]
-        multipliers = [v / baseline for v in values]
-        biggest = max(multipliers)
-        for i, r in enumerate(self.content):
-            gain = multipliers[i]
-            if i == baseline_row:
-                r.append(f'1x')
-            elif gain == biggest:
-                r.append('**' + num2str(gain) + 'x**')
-            else:
-                r.append(num2str(gain) + 'x')
+        if baseline <= 0:
+            for i, r in enumerate(self.content):
+                r.append('')
+        else:
+            multipliers = [v / baseline for v in values]
+            biggest = max(multipliers)
+            for i, r in enumerate(self.content):
+                gain = multipliers[i]
+                if i == baseline_row:
+                    r.append(f'1x')
+                elif gain == biggest:
+                    r.append('**' + num2str(gain) + 'x**')
+                else:
+                    r.append(num2str(gain) + 'x')
 
         self.header_row.append(title + ' Gains')
         return self
@@ -223,7 +227,7 @@ class StatsTable(object):
     def printable_bytes(self) -> StatsTable:
         """
             Transforms the number in each cell from bytes 
-            to more readable number of Gb, Mb & Kb...
+            to more readable number of GB, MB & KB...
         """
         for row_idx, row in enumerate(self.content):
             for cell_idx, cell in enumerate(row):
