@@ -30,6 +30,9 @@ class MicroBench(object):
         limit_iterations=1000,
         limit_operations=10000,
         limit_seconds=10.0,
+        save_context=True,
+        save_io=True,
+        save_source=True,
         **kwargs,
     ):
         """
@@ -47,8 +50,11 @@ class MicroBench(object):
         self.limit_iterations = limit_iterations
         self.limit_operations = limit_operations
         self.limit_seconds = limit_seconds
+        self.save_context = save_context
+        self.save_io = save_io
+        self.save_source = save_source
         self.attributes = dict(**kwargs)
-        self.source = source
+        self.source = source        
         self.deserialize(serialized)
 
     def deserialize(self, serialized):
@@ -103,20 +109,53 @@ class MicroBench(object):
         return result
 
     def stats(self) -> dict:
-        return {
+        result = {
             'benchmark_name': self.benchmark_name,
-            'benchmark_code': inspect.getsource(self.func),
             'time_elapsed': self.time_elapsed,
             'count_iterations': self.count_iterations,
             'count_operations': self.count_operations,
             'msecs_per_operation': self.msecs_per_op(),
             'operations_per_second': self.ops_per_sec(),
         }
+        if self.save_source:
+            result['benchmark_code'] = inspect.getsource(self.func)
+        return result
+    
+    def current_io(self) -> dict:
+        disk = psutil.disk_io_counters()
+        net = psutil.net_io_counters()
+        return {
+            'bytes_sent': net.bytes_sent,
+            'bytes_recv': net.bytes_recv,
+            'packets_sent': net.packets_sent,
+            'packets_recv': net.packets_recv,
+
+            'read_bytes': disk.read_bytes,
+            'write_bytes': disk.write_bytes,
+            'read_requests': net.read_count,
+            'write_requests': net.write_count,
+        }
+
+    def io(self) -> dict:
+        new_io = self.current_io()
+        delta_io = {}
+        for k, v in self.last_io.items():
+            if self.time_elapsed > 0:
+                d = new_io[k] - v
+                delta_io[k] = d
+                delta_io[k + '_per_second'] = d / self.time_elapsed
+            else:
+                delta_io[k] = 0
+                delta_io[k + '_per_second'] = 0
+        return delta_io
 
     def serialize(self) -> dict:
         result = copy.deepcopy(self.attributes)
-        result.update(self.context())
         result.update(self.stats())
+        if self.save_context:
+            result.update(self.context())
+        if self.save_io:
+            result.update(self.io())
         return result
 
     def __dict__(self) -> dict:
@@ -132,6 +171,7 @@ class MicroBench(object):
         before = time.time()
         self.count_operations = 0
         self.count_iterations = 0
+        self.last_io = self.current_io()
         while True:
             ops = self.func()
 
