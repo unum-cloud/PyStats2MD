@@ -22,25 +22,11 @@ def secs2str(num: float) -> str:
         return '{:,.0f} mins, {:,.0f} secs'.format(mins, secs)
 
 
-def bytes2str(num: int) -> str:
-    if not isinstance(num, int):
-        if isinstance(num, float):
-            num = int(num)
-        elif isinstance(num, str):
-            num = int(num)
-        else:
-            return ''
-
-    power = 2**10  # 2**10 = 1024
-    n = 0
-    power_labels = {0: '', 1: 'K', 2: 'M', 3: 'G', 4: 'T'}
-    while num > power:
-        num /= power
-        n += 1
-    return f'{num} {power_labels[n]}b'
-
-
-def metric2str(num: float, decimal_places=1) -> str:
+def metric2str(
+    num: float, decimal_places=1,
+    units=['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'],
+    step=1000.0
+) -> str:
     if not isinstance(num, float):
         if isinstance(num, int):
             num = float(num)
@@ -49,11 +35,29 @@ def metric2str(num: float, decimal_places=1) -> str:
         else:
             return ''
 
-    for unit in ['', 'K', 'M', 'G', 'T']:
-        if num < 1000.0:
+    for unit in units:
+        if num < step:
             break
-        num /= 1000.0
-    return f'{num:.{decimal_places}f} {unit}'
+        num /= step
+    return f'{num:,.{decimal_places}f} {unit}'
+
+
+def bytes2str(num: int, decimal_places=1) -> str:
+    return metric2str(
+        num=num,
+        decimal_places=decimal_places,
+        units=['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+        step=1024
+    )
+
+
+def bits2str(num: int, decimal_places=1) -> str:
+    return metric2str(
+        num=num,
+        decimal_places=decimal_places,
+        units=['bits', 'Kib', 'Mib', 'Gib', 'Tib', 'Pib', 'Eib', 'Zib', 'Yib'],
+        step=1024
+    )
 
 
 def num2str(num: float) -> str:
@@ -99,6 +103,7 @@ def table2str(table: List[List[str]]) -> str:
             delimeters = [':---'] + [':---:'] * (len(cells) - 1)
             lines.append(render_line(delimeters))
     return '\n'.join(lines)
+
 
 def random_str(letters: int = 8) -> str:
     return ''.join(choice(ascii_lowercase) for i in range(letters))
