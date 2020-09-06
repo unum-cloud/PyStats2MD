@@ -99,6 +99,8 @@ class StatsSubset(object):
                         return False
                     if not filter_criterea.search(current_value):
                         return False
+                    else:
+                        return True
                 if current_value != filter_criterea:
                     return False
             return True
