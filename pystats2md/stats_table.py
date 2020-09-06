@@ -87,24 +87,33 @@ class StatsTable(object):
         baseline_row=0,
     ) -> StatsTable:
 
-        title, values = self._column_title_and_values(column)
-        baseline = values[baseline_row]
-        if baseline <= 0:
+        gains_per_row = []
+        title = ''
+        if not column:
+            title = 'Gains'
+            baselines = self._only_row(baseline_row)
+            count_cols = self.cols()
             for i, r in enumerate(self.content):
-                r.append('')
+                gains_in_row = [r[i] / baselines[i] for i in range(count_cols)]
+                mean_gain_in_row = sum(gains_in_row) / count_cols
+                gains_per_row.append(mean_gain_in_row)
         else:
-            multipliers = [v / baseline for v in values]
-            biggest = max(multipliers)
-            for i, r in enumerate(self.content):
-                gain = multipliers[i]
-                if i == baseline_row:
-                    r.append(f'1x')
-                elif gain == biggest:
-                    r.append('**' + num2str(gain) + 'x**')
-                else:
-                    r.append(num2str(gain) + 'x')
+            title = self.header_row[column] + ' Gains'    
+            values = self._only_col(column)
+            baseline = values[baseline_row]
+            gains_per_row = [v / baseline for v in values]
 
-        self.header_row.append(title + ' Gains')
+        biggest = max(gains_per_row)
+        for i, r in enumerate(self.content):
+            gain = gains_per_row[i]
+            if i == baseline_row:
+                r.append(f'1x')
+            elif gain == biggest:
+                r.append('**' + num2str(gain) + 'x**')
+            else:
+                r.append(num2str(gain) + 'x')
+
+        self.header_row.append(title)
         return self
 
     def add_ranking(
