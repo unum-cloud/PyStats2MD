@@ -39,14 +39,13 @@ class StatsTable(object):
         assert column in self.header_row, 'No such column'
         return index_of(self.header_row, column)
 
-    def _numeric_value(self, row, col) -> float:
-        v = self.content[row][col]
+    def _numeric_value(self, v, default=0) -> float:
         if isinstance(v, (int, float)):
             return v
         elif isinstance(v, str):
             return float(v)
         else:
-            return 0
+            return default
 
     def _only_numerics(self, vals: list) -> list:
         return [v for v in vals if isinstance(v, (int, float))]
@@ -91,15 +90,16 @@ class StatsTable(object):
         title = ''
         if not column:
             title = 'Gains'
-            baselines = self._only_row(baseline_row)
+            baselines = list(map(self._numeric_value, self._only_row(baseline_row)))
             count_cols = self.cols()
             for i, r in enumerate(self.content):
+                r = list(map(self._numeric_value, r))
                 gains_in_row = [r[i] / baselines[i] for i in range(count_cols)]
                 mean_gain_in_row = sum(gains_in_row) / count_cols
                 gains_per_row.append(mean_gain_in_row)
         else:
             title = self.header_row[column] + ' Gains'    
-            values = self._only_col(column)
+            values = list(map(self._numeric_value, self._only_col(column)))
             baseline = values[baseline_row]
             gains_per_row = [v / baseline for v in values]
 
